@@ -1,0 +1,6 @@
+- name: Setup local environment
+  hosts: local
+  roles:
+    - role: xonsh
+      tags:
+        - shell

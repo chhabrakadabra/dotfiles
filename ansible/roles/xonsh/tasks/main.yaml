@@ -1,0 +1,4 @@
+- name: Install Xonsh via homebrew
+  homebrew:
+    name: xonsh
+    state: latest

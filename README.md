@@ -1,6 +1,4 @@
 # Abhin's Dotfiles
 
-I've tried to write my dotfiles repository as a Python package because why not. To use it, just run
-`pip install -U .`.
-
-Internally, the package runs ansible to set everything up.
+Setup the dotfiles using the script in `bin/dotfiles`. After the first time the script is run, it is
+placed in the executable path and can be directly run as `dotfiles`.

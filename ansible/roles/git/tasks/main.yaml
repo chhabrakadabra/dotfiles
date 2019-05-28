@@ -1,0 +1,14 @@
+- name: Install git via homebrew
+  homebrew:
+    name: git
+    state: present
+- name: Global gitignore file
+  file:
+    src: "{{ role_path }}/files/gitignore_global"
+    dest: "~/.gitignore_global"
+    state: link
+    force: yes
+- name: Gitconfig
+  template:
+    src: "gitconfig.j2"
+    dest: "~/.gitconfig"

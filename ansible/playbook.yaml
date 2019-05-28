@@ -4,3 +4,7 @@
     - role: xonsh
       tags:
         - shell
+    - role: git
+      tags:
+        - git
+        - basics

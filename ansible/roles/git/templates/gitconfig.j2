@@ -1,0 +1,32 @@
+[alias]
+	st = status
+	ci = commit
+	br = branch
+	co = checkout
+	df = diff
+  lg = "!f() { \
+       git log --oneline --decorate=short --graph --color $@ | ag --passthrough --color '\\[*[A-Z]{2,4}-[0-9]{1,4}\\]*' --color-match='38;5;89' | less --RAW-CONTROL-CHARS ; \
+      }; f"
+	unstage = reset HEAD --
+	last = log -1 HEAD
+	recent = for-each-ref --sort=-committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))' --count=10
+	mend = !git add -A && git commit --amend -v
+
+[user]
+	name = {{ full_name }}
+	email = {{ git_email }}
+[push]
+	default = current
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	required = true
+[stash]
+	showPatch = true
+[diff "gz"]
+	textconv = zcat
+	binary = true
+[core]
+	excludesfile = ~/.gitignore_global
+[github]
+	user = {{ github_username }}

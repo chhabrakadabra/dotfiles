@@ -3,5 +3,6 @@
 set -e
 
 echo 'Starting Ansible...'
+cd $(dirname $(dirname "$(readlink $0)"))
 ansible-playbook -i ansible/hosts.yaml ansible/playbook.yaml
 echo 'Ansible run finished...'

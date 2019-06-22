@@ -1,6 +1,10 @@
 - name: Setup local environment
   hosts: local
   roles:
+    - role: system
+      tags:
+        - basics
+        - system
     - role: xonsh
       tags:
         - shell

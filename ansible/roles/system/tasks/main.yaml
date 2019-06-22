@@ -1,0 +1,174 @@
+- name: Bootstrap dotfiles script
+  file:
+    src: "{{ playbook_dir | dirname }}/bin/dotfiles"
+    dest: "/usr/local/bin/dotfiles"
+    state: link
+    force: yes
+
+############
+## Devtools
+############
+
+- name: Enable debug menu in Safari
+  osx_defaults:
+    domain: com.apple.Safari
+    key: IncludeInternalDebugMenu
+    type: bool
+    value: true
+    state: present
+
+##############
+## Navigation
+##############
+
+- name: Always show scrollbars
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: AppleShowScrollBars
+    type: string
+    value: Always
+    state: present
+- name: Show hidden files in finder
+  osx_defaults:
+    domain: com.apple.finder
+    key: AppleShowAllFiles
+    type: bool
+    value: true
+    state: present
+
+###################
+## Typing/Keyboard
+###################
+
+- name: Disable automatic capitalization
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: NSAutomaticCapitalizationEnabled
+    type: bool
+    value: false
+    state: present
+- name: Disable period substitution
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: NSAutomaticPeriodSubstitutionEnabled
+    type: bool
+    value: false
+    state: present
+- name: Disable smart dashes
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: NSAutomaticDashSubstitutionEnabled
+    type: bool
+    value: false
+    state: present
+- name: Disable smart quotes
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: NSAutomaticQuoteSubstitutionEnabled
+    type: bool
+    value: false
+    state: present
+- name: Disable auto-correct
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: NSAutomaticSpellingCorrectionEnabled
+    type: bool
+    value: false
+    state: present
+- name: Set high initial key-repeat
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: InitialKeyRepeat
+    type: int
+    value: 20
+    state: present
+- name: Set high key-repeat
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: KeyRepeat
+    type: int
+    value: 1
+    state: present
+
+##################
+## Mouse/trackpad
+##################
+
+- name: Enable tap-to-click on Boot screen
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: com.apple.mouse.tapBehavior
+    type: int
+    value: 1
+    state: present
+- name: Enable tap-to-click in general
+  osx_defaults:
+    domain: com.apple.AppleMultitouchTrackpad
+    key: Clicking
+    type: int
+    value: 1
+    state: present
+
+###################
+## Finder settings
+###################
+
+- name: Show hidden files in Finder
+  osx_defaults:
+    domain: com.apple.finder
+    key: AppleShowAllFiles
+    type: bool
+    value: true
+    state: present
+
+- name: Show all filename extensions in Finder
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: AppleShowAllExtensions
+    type: bool
+    value: true
+    state: present
+
+- name: Show status bar in Finder
+  osx_defaults:
+    domain: com.apple.finder
+    key: ShowStatusBar
+    type: bool
+    value: true
+    state: present
+
+- name: Show path bar in Finder
+  osx_defaults:
+    domain: com.apple.finder
+    key: ShowPathBar
+    type: bool
+    value: true
+    state: present
+
+- name: Disable warning when changing file extensions
+  osx_defaults:
+    domain: com.apple.finder
+    key: FXEnableExtensionChangeWarning
+    type: bool
+    value: false
+    state: present
+
+#################
+## Dock settings
+#################
+
+- name: Set the icon size of the Dock items
+  osx_defaults:
+    domain: com.apple.dock
+    key: tilesize
+    type: float
+    value: 36
+    state: present
+
+- name: Auto-hide the dock
+  osx_defaults:
+    domain: com.apple.dock
+    key: autohide
+    type: bool
+    value: true
+    state: present

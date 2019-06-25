@@ -1,0 +1,76 @@
+- name: Install htop
+  homebrew:
+    name: htop
+    state: present
+- name: Install httpie
+  homebrew:
+    name: httpie
+    state: present
+- name: Install jq
+  homebrew:
+    name: jq
+    state: present
+- name: Install (K8s) Helm
+  homebrew:
+    name: kubernetes-helm
+    state: present
+- name: Install MAS (Mac App Store) utility
+  homebrew:
+    name: mas
+    state: present
+- name: Install pigz
+  homebrew:
+    name: pigz
+    state: present
+- name: Install Python
+  homebrew:
+    name: python
+    state: present
+- name: Install Postgresql
+  homebrew:
+    name: postgresql
+    state: present
+- name: Install sqlite
+  homebrew:
+    name: sqlite
+    state: present
+- name: Install ag
+  homebrew:
+    name: the_silver_searcher
+    state: present
+- name: Install watch
+  homebrew:
+    name: watch
+    state: present
+- name: Install MAS
+  homebrew:
+    name: mas
+    state: present
+- name: Install Anki
+  homebrew_cask:
+    name: anki
+    state: present
+- name: Install Datagrip
+  homebrew_cask:
+    name: datagrip
+    state: present
+- name: Install Docker
+  homebrew_cask:
+    name: docker
+    state: present
+- name: Install Google Drive
+  homebrew_cask:
+    name: google-drive-file-stream
+    state: present
+- name: Install Polar Bookshelf
+  homebrew_cask:
+    name: polar-bookshelf
+    state: present
+- name: Install Spotify
+  homebrew_cask:
+    name: spotify
+    state: present
+- name: Install Things3
+  command: mas install 904280696
+  args:
+    creates: "/Applications/Things3.app"

@@ -4,5 +4,5 @@ set -e
 
 echo 'Starting Ansible...'
 cd $(dirname $(dirname "$(readlink $0)"))
-ansible-playbook -i ansible/hosts.yaml ansible/playbook.yaml
+ansible-playbook -i ansible/hosts.yaml ansible/playbook.yaml --ask-become-pass $@
 echo 'Ansible run finished...'

@@ -1,0 +1,20 @@
+- name: Install Emacs
+  homebrew_cask:
+    name: emacs
+    state: present
+- name: Create .emacs.d directory
+  file:
+    path: "~/.emacs.d"
+    state: directory
+- name: Init file
+  file:
+    src: "{{ role_path }}/files/init.el"
+    dest: "~/.emacs.d/init.el"
+    state: link
+    force: yes
+- name: Main config orgmode file
+  file:
+    src: "{{ role_path }}/files/config.org"
+    dest: "~/.emacs.d/config.org"
+    state: link
+    force: yes

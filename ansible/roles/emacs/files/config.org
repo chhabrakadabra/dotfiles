@@ -1,0 +1,740 @@
+#+TITLE: Emacs config file
+#+AUTHOR: Abhin Chhabra
+#+BABEL: :cache yes
+#+PROPERTY: header-args :tangle yes
+
+* Introduction
+
+  I'm writing my emacs configs in [[http://orgmode.org][Org mode]]. I'm doing this because my
+  current emacs dot files have become very complicated and hard to
+  follow. Declaring it like documentation will certainly help.
+
+  The packages management will also be done through this file. As a
+  result, starting emacs will update packages, if needed.
+
+  Do not make any changes to =config.el= directly, since those changes
+  will be overridden by this file.
+
+  This org file is inspired by the following:
+  - https://writequit.org/org/settings.html
+  - https://github.com/larstvei/dot-emacs
+
+* Basic mechanism
+
+  The =init.el= file is loaded first. It goes ahead and requires
+  =org-mode= and uses =org-babel= to load this file.
+
+* Theming
+
+  I like configuring the theme before the package installation, because in the
+  event of package installations, we end up with the default theme for a while
+  and it looks weird.
+
+  #+BEGIN_SRC emacs-lisp
+    (load-theme 'misterioso t)
+  #+END_SRC
+
+  Adjusting the `frame-background-mode` variable lets the rainbow delimiters
+  package choose how to color the delimiters. This variable basically is set to
+  "dark" or "light" based on how I categorize my theme. Since `misterioso` is
+  pretty dark, I'll just set it to "dark".
+
+  #+begin_src emacs-lisp
+    (setq frame-background-mode 'dark)
+  #+end_src
+
+* Packages
+
+  This section is responsible for installing packages. We use
+  =package= for this purpose.
+
+  #+BEGIN_SRC emacs-lisp
+    (require 'package)
+    (package-initialize)
+  #+END_SRC
+
+  We use [[http://melpa.milkbox.net/#/][melpa]] as our package archive.
+
+  #+BEGIN_SRC emacs-lisp
+    (add-to-list
+     'package-archives
+     '("melpa" . "https://melpa.org/packages/"))
+    (add-to-list
+     'package-archives
+     '("melpa-stable" . "https://stable.melpa.org/packages/"))
+  #+END_SRC
+
+  And now we finally load our packages:
+
+  #+BEGIN_SRC emacs-lisp
+    (defvar my/install-packages
+      '(
+        ;; package management
+        use-package
+
+        ;; to hide unnecessary modes from the mode line
+        diminish
+
+        ;; linting
+        flycheck flycheck-pyflakes py-isort
+
+        ;; completion
+        counsel swiper ivy-hydra counsel-projectile company smartparens
+
+        ;; snippets
+        yasnippet yasnippet-snippets
+
+        ;; scrolling
+        smooth-scroll
+
+        ;; selection
+        expand-region
+
+        ;; version control
+        magit git-gutter
+
+        ;; Projects
+        projectile
+
+        ;; File modes
+        yaml-mode groovy-mode rjsx-mode markdown-mode jinja2-mode
+        dockerfile-mode plantuml-mode
+
+        ;; Indentation guide (vertical lines showing indentation)
+        indent-guide
+
+        ;; Populate =PATH= from shell
+        exec-path-from-shell
+
+        ;; Code folding
+        origami
+
+        ;; rainbow delimiters to color matching parentheses etc.
+        rainbow-delimiters
+
+        ;; Setting the python virtualenv
+        pyvenv
+
+        ;; Language server
+        lsp-mode lsp-ui company-lsp))
+
+    (defvar packages-refreshed? nil)
+
+    (dolist (pack my/install-packages)
+      (unless (package-installed-p pack)
+        (unless packages-refreshed?
+          (package-refresh-contents)
+          (setq packages-refreshed? t))
+        (package-install pack)))
+
+    ;; Load use-package, used for loading packages everywhere else
+    (require 'use-package)
+    ;; Load diminish (it's used by use-package)
+    (require 'diminish)
+    ;; Set to t to debug package loading
+    (setq use-package-verbose nil)
+  #+END_SRC
+
+* Utilities
+
+  Various functions I'll be needing later on.
+
+  #+begin_src emacs-lisp
+    (defun flatten (LIST)
+      "flattens LIST"
+      (cond
+       ((atom LIST) (list LIST))
+       ((null (cdr LIST)) (flatten (car LIST)))
+       (t (append (flatten (car LIST)) (flatten (cdr LIST))))))
+
+    (defun dump-to-file (content filename)
+      "simplistic dumping of CONTENT to a file FILENAME"
+      (save-excursion
+        (let ((buf (find-file-noselect filename)))
+          (set-buffer buf)
+          (erase-buffer)
+          (insert content)
+          (save-buffer)
+          (kill-buffer))))
+  #+end_src
+* General settings
+
+** Encoding
+
+  Let's start with switching everything to UTF-8:
+
+  #+BEGIN_SRC emacs-lisp
+    (prefer-coding-system 'utf-8)
+    (set-default-coding-systems 'utf-8)
+    (set-terminal-coding-system 'utf-8)
+    (set-keyboard-coding-system 'utf-8)
+    (setq default-buffer-file-coding-system 'utf-8)
+  #+END_SRC
+
+** Miscellaneous
+
+  Turn off a bunch of useless modes (like menu bar, toolbar etc.):
+
+  #+BEGIN_SRC emacs-lisp
+    (when (functionp 'menu-bar-mode)
+      (menu-bar-mode -1))
+    (when (functionp 'set-scroll-bar-mode)
+      (set-scroll-bar-mode 'nil))
+    (when (functionp 'mouse-wheel-mode)
+      (mouse-wheel-mode -1))
+    (when (functionp 'tooltip-mode)
+      (tooltip-mode -1))
+    (when (functionp 'tool-bar-mode)
+      (tool-bar-mode -1))
+  #+END_SRC
+
+  We don't need to GC as frequently as emacs would like to:
+
+  #+BEGIN_SRC emacs-lisp
+    (setq gc-cons-threshold 20000000)
+  #+END_SRC
+
+  Shortcuts to not have to type "yes" or "no":
+
+  #+BEGIN_SRC emacs-lisp
+    (defalias 'yes-or-no-p 'y-or-n-p)
+  #+END_SRC
+
+  Don't bother with the startup message.
+
+  #+BEGIN_SRC emacs-lisp
+    (setq inhibit-startup-message t)
+  #+END_SRC
+
+  Emacs keeps customizing the =init.el= file with unnecessary stuff. So we
+  redirect these customizations to a file and don't bother using it.
+
+  #+begin_src emacs-lisp
+    (setq custom-file "~/.emacs.d/custom.el")
+
+    ;; if we wanted to use this file, we could use it by
+    ;; uncommenting the following:
+    ; (load custom-file 'noerror)
+  #+end_src
+
+* Path from shell initialize
+
+  Use the =PATH= variable of the shell to populate the =PATH= variable.
+
+  #+begin_src emacs-lisp
+    (when (memq window-system '(mac ns))
+      (exec-path-from-shell-initialize))
+  #+end_src
+
+* Editing
+
+** Whitespace cleanup
+
+  Require a newline at the end of files:
+
+  #+BEGIN_SRC emacs-lisp
+    (setq require-final-newline t)
+  #+END_SRC
+
+  Single space still ends a sentence:
+
+  #+BEGIN_SRC emacs-lisp
+    (setq sentence-end-double-space nil)
+  #+END_SRC
+
+  Delete trailing whitespace in all files on save:
+
+  #+BEGIN_SRC emacs-lisp
+    (add-hook 'before-save-hook 'delete-trailing-whitespace)
+  #+END_SRC
+
+** Line width
+
+  Set fill-column to 80 characters and set tab width to 2:
+
+  #+BEGIN_SRC emacs-lisp
+    (setq-default fill-column 100)
+    (setq-default tab-width 2)
+    (setq-default indent-tabs-mode nil)
+  #+END_SRC
+
+  Turn on auto-fill mode in text buffers:
+
+  #+BEGIN_SRC emacs-lisp
+    (add-hook 'text-mode-hook 'turn-on-auto-fill)
+  #+END_SRC
+
+** Matching parentheses
+
+   #+begin_src emacs-lisp
+     (use-package smartparens
+       :ensure t
+       :config
+       (smartparens-global-mode))
+   #+end_src
+
+* Navigating
+
+  =Saveplace= navigates back to where you were editing a file the next time you
+  open it.
+
+  #+BEGIN_SRC emacs-lisp
+    (save-place-mode 1)
+  #+END_SRC
+
+  Move between frames easily:
+
+  #+begin_src emacs-lisp
+    (when (fboundp 'windmove-default-keybindings)
+      (windmove-default-keybindings))
+  #+end_src
+
+* Reading
+
+** Syntax highlighting
+
+   Turn on syntax highlighting for all buffers:
+
+   #+BEGIN_SRC emacs-lisp
+     (global-font-lock-mode t)
+   #+END_SRC
+
+   Turn on rainbow delimiters to color matching parentheses together. Makes
+   easier to see corresponding parentheses.
+
+   #+begin_src emacs-lisp
+     (use-package rainbow-delimiters
+       :ensure t
+       :config
+       (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+   #+end_src
+
+** Line numbers
+
+   Line numbers are great! Let's enable them globally.
+   While we're at it, also enable line and column number modes.
+
+   #+BEGIN_SRC emacs-lisp
+     (global-linum-mode 1)
+     (line-number-mode 1)
+     (column-number-mode 1)
+   #+END_SRC
+
+** Font size
+
+   #+begin_src emacs-lisp
+     (define-key global-map (kbd "C-+") 'text-scale-increase)
+     (define-key global-map (kbd "C--") 'text-scale-decrease)
+     (set-face-attribute 'default nil :height 100)
+   #+end_src
+
+** Code folding
+
+   #+begin_src emacs-lisp
+     (defun my/focus-on-next-fold ()
+       (interactive)
+       (let ((buf (current-buffer))
+             (p (point)))
+         (origami-forward-fold-same-level buf p)
+         (origami-show-only-node buf p)
+         (origami-open-node-recursively buf p)))
+
+     (defun my/focus-on-previous-fold ()
+       (interactive)
+       (let ((buf (current-buffer))
+             (p (point)))
+         (origami-backward-fold-same-level buf p)
+         (origami-show-only-node buf p)
+         (origami-open-node-recursively buf p)))
+
+     (use-package origami
+       :diminish 'origami-mode
+       :init
+       (global-origami-mode)
+       :config
+       (define-key origami-mode-map (kbd "C-c TAB")
+         (defhydra hydra-folding (:color red)
+           "
+      _o_pen node    _n_ext fold focus       _O_pen all nodes   _s_how only this node
+      _c_lose node   _p_revious fold focus   _q_uit
+      "
+           ("o" origami-open-node-recursively)
+           ("c" origami-close-node-recursively)
+           ("n" my/focus-on-next-fold)
+           ("p" my/focus-on-previous-fold)
+           ("s" origami-show-only-node)
+           ("O" origami-open-all-nodes)
+           ("q" nil :color blue))))
+   #+end_src
+
+* Hydra
+
+  #+begin_src emacs-lisp
+    (use-package hydra
+      :ensure t)
+  #+end_src
+
+* Window specific settings
+
+  These settings are used when emacs is run with a window.
+
+  Maximize emacs on startup:
+
+  #+BEGIN_SRC emacs-lisp
+    (add-to-list 'default-frame-alist '(fullscreen . maximized))
+  #+END_SRC
+
+  Confirm before killing emacs in window system:
+
+  #+BEGIN_SRC emacs-lisp
+    (when (window-system)
+      (setq confirm-kill-emacs 'yes-or-no-p))
+  #+END_SRC
+
+* Version control related
+
+  Automatically revert a file if it's changed on disk:
+
+  #+BEGIN_SRC emacs-lisp
+    (global-auto-revert-mode 1)
+    ;; be quiet about reverting files
+    (setq auto-revert-verbose nil)
+  #+END_SRC
+
+  Define keyboard shortcut for =magit-status=
+
+  #+begin_src emacs-lisp
+    (use-package magit
+      ;; Magit turns on auto-revert-mode
+      :diminish auto-revert-mode
+      :bind (("\C-cm" . magit-status)))
+  #+end_src
+
+  Show git changes directly in the gutter:
+
+  # #+begin_src emacs-lisp
+  #   (use-package git-gutter
+  #     :diminish 'git-gutter-mode
+  #     :config
+  #     (global-git-gutter-mode +1))
+  # #+end_src
+
+* Temporary file settings
+
+  Customize file backups:
+
+  #+BEGIN_SRC emacs-lisp
+    (setq
+     backup-by-copying t ; don't clobber symlinks
+     backup-directory-alist '(("." . "~/.saves")) ; don't litter the fs tree
+     auto-save-file-name-transforms '((".*" "~/.saves" t))
+     delete-old-versions t
+     kept-new-versions 6
+     kept-old-versions 2
+     version-control t) ; use versioned backups
+  #+END_SRC
+
+* Org mode
+
+** Basic Keyboard shortcuts
+
+  #+BEGIN_SRC emacs-lisp
+    (define-key global-map "\C-cl" 'org-store-link)
+    (define-key global-map "\C-ca" 'org-agenda)
+    (define-key global-map "\C-cc" 'org-capture)
+    (define-key global-map "\C-cb" 'org-iswitchb)
+  #+END_SRC
+
+** Configure TODO behavior
+
+  Dependencies in TODOs and checklists makes sure that unless all subitems are
+  checked, the root TODO (or checkbox) cannot be checked. Also, when TODOs are
+  completed, log the timestamp along with a note.
+
+  #+BEGIN_SRC emacs-lisp
+    (setq org-enforce-todo-dependencies t)
+    (setq org-enforce-todo-checkbox-dependencies t)
+    (setq org-log-done 'note)
+    (setq org-log-into-drawer t)
+  #+END_SRC
+
+** Set agenda files
+
+  Org-mode allows specifying directories and it adds all files ending in `.org`
+  to the `org-agenda-files` list implicitly, but it doesn't do a recursive
+  search. We can do our own recursive search through all of Dropbox and Google
+  Drive, but that will take too long. So instead, I'll make a command to trigger
+  the said search and serialize the results to a file. Then, I'll hook up the
+  `org-agenda-files` to that one file. Periodically, run the
+  `my/regenerate-org-agenda-files` to refresh everything.
+
+  #+begin_src emacs-lisp
+    (defun my/regenerate-org-agenda-files ()
+      (interactive)
+      (unless (boundp 'my/org-agenda-dirs)
+        (error "`my/org-agenda-dirs` not defined"))
+      (load-library "find-lisp")
+      (let* ((outfile "~/.emacs.d/org-agenda-files")
+             (outlist (mapcar
+                       (lambda (d) (find-lisp-find-files d "\.org$"))
+                       my/org-agenda-dirs))
+             (outlist (flatten outlist))
+             (output (mapconcat 'identity outlist "\n")))
+
+        (dump-to-file output outfile)))
+
+    (setq my/org-agenda-dirs '("~/Dropbox/" "~/Google Drive/" "~/.emacs.d/"))
+    (setq org-agenda-files "~/.emacs.d/org-agenda-files")
+  #+end_src
+
+** Setup latex and PlantUML
+
+   This section is heavily influenced by [[http://katherine.cox-buday.com/blog/2015/03/14/writing-specs-with-org-mode/][this blog]]. Latex needs to be installed
+   manually. I used [[https://tug.org/mactex/mactex-download.html][this link]]. I also added =/Library/TeX/texbin/= to =$PATH=. I
+   also had to install Plant UML from [[http://sourceforge.net/projects/plantuml/files/plantuml.jar/download][here]] and place it in my =~/.emacs.d/=. I
+   also had to install the Java runtime (I actually installed the full SDK,
+   because why not).
+
+   #+begin_src emacs-lisp
+     (setq plantuml-jar-path "~/.emacs.d/plantuml.jar")
+     (setq org-plantuml-jar-path "~/.emacs.d/plantuml.jar")
+     (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+     (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+     (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
+     (setq org-confirm-babel-evaluate 'nil)
+   #+end_src
+
+** Other miscellaneous org settings
+
+  #+BEGIN_SRC emacs-lisp
+    ;; to not accidentally delete invisible characters
+    (setq org-catch-invisible-edits 'show)
+
+    ;; Enable syntax highlighting in org src blocks
+    (setq org-src-fontify-natively t)
+  #+END_SRC
+
+* Linting
+
+  #+BEGIN_SRC emacs-lisp
+    (add-hook 'after-init-hook #'global-flycheck-mode)
+  #+END_SRC
+
+* Completion
+
+  =Ivy= is an awesome completion frontend. It's combined with =Swiper= for
+  searching.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package ivy
+      :diminish 'ivy-mode
+      :config
+      (ivy-mode 1)
+      (setq ivy-use-virtual-buffers t)
+      (setq ivy-count-format "(%d/%d) ")
+      (counsel-projectile-mode)
+      :bind (("C-x C-r" . counsel-recentf)
+             ("C-s" . swiper)
+             ("C-r" . swiper)
+             ("M-x" . counsel-M-x)
+             ("C-x C-f" . counsel-find-file)
+             ("C-c r" . ivy-resume)))
+  #+END_SRC
+
+  On a separate but related note, setup autocomplete
+
+  #+begin_src emacs-lisp
+    (use-package company
+      :ensure t
+      :diminish 'company-mode
+      :config
+      (define-key company-active-map (kbd "M-n") nil)
+      (define-key company-active-map (kbd "M-p") nil)
+      (define-key company-active-map (kbd "C-n") #'company-select-next)
+      (define-key company-active-map (kbd "C-p") #'company-select-previous)
+      (global-company-mode +1)
+      (global-set-key (kbd "M-/") 'company-complete)
+      :init
+      (setq company-minimum-prefix-length 1)
+      (setq company-idle-delay 0.2)
+      (setq company-dabbrev-downcase nil))
+
+  #+end_src
+
+* Snippets
+
+  Yasnippets is pretty good. I mostly use =yas-insert-snippet=.
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package yasnippet
+      :diminish 'yas-global-mode
+      :config
+      (yas-global-mode 1)
+      :bind (("C-c y" . yas-insert-snippet)))
+  #+END_SRC
+
+* Mouse integration
+
+  #+BEGIN_SRC emacs-lisp
+    (defun my/scroll-down ()
+      (interactive)
+      (scroll-down 2))
+
+    (defun my/scroll-up ()
+      (interactive)
+      (scroll-up 2))
+
+    (use-package mouse
+      :config
+      (xterm-mouse-mode t)
+      (defun track-mouse (e))
+      (setq mouse-sel-mode t)
+      ;; disable bell (function )
+      (setq ring-bell-function 'ignore)
+
+      :bind (("<wheel-up>" . my/scroll-down)
+             ("<wheel-down>" . my/scroll-up)))
+  #+END_SRC
+
+  Better scrolling:
+
+  #+begin_src emacs-lisp
+    (use-package smooth-scroll
+      :diminish 'smooth-scroll-mode
+      :config
+      (smooth-scroll-mode t)
+      (setq smooth-scroll/vscroll-step-size 8))
+  #+end_src
+* Expanding region selection
+
+  With "C-=", we can select an ever expanding region. This is very useful.
+
+  #+begin_src emacs-lisp
+    (use-package expand-region
+      :bind (("C-=" . er/expand-region)))
+  #+end_src
+* Projects
+
+  #+begin_src emacs-lisp
+    (use-package projectile
+      :diminish 'projectile-mode
+      :config
+      (projectile-global-mode)
+      (setq projectile-enable-caching t)
+      (setq projectile-switch-project-action 'projectile-dired)
+      (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+  #+end_src
+* Python
+
+** Virtualenv
+
+   #+begin_src emacs-lisp
+     (use-package pyvenv)
+   #+end_src
+
+** Python Language Server
+
+   I'm trying to use [[https://github.com/andrew-christianson/lsp-python-ms][ls-python-ms]] to setup the Microsoft Python language server.
+   It's supposed to be much faster than the Palantir language server (which has
+   been fairly laggy for me).
+
+   #+begin_src emacs-lisp
+     ;; (load "~/.emacs.d/lsp-python-ms.el")
+     ;; (use-package lsp-python-ms
+     ;;   :ensure nil
+     ;;   :hook (python-mode . lsp)
+     ;;   :config
+     ;;   (setq lsp-print-io t)
+     ;;   ;; for executable of language server, if it's not symlinked on your PATH
+     ;;   (setq lsp-python-ms-executable "Microsoft.Python.LanguageServer"))
+
+     (use-package lsp-python-ms
+       :ensure t
+       :hook (python-mode . (lambda ()
+                              (require 'lsp-python-ms)
+                              (lsp))))
+
+     (use-package lsp-ui
+       :commands lsp-ui-mode
+       :config
+       (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+       (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
+       (setq lsp-prefer-flymake nil)
+       (setq lsp-ui-sideline-mode nil))
+
+     (use-package company-lsp
+       :commands company-lsp)
+   #+end_src
+
+** linting
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package flycheck-pyflakes
+      :diminish 'flycheck-mode
+      :config
+      (add-hook 'python-mode-hook 'flycheck-mode)
+      (setq flycheck-disabled-checkers '(pylint-flake8)))
+  #+END_SRC
+
+  #+BEGIN_SRC emacs-lisp
+    (use-package py-isort
+      :config
+      (add-hook 'before-save-hook 'py-isort-before-save)
+      (setq py-isort-options '("--virtual-env=/Users/abhinchhabra/.virtualenvs/bliss")))
+  #+END_SRC
+
+** Indent guide
+
+   #+begin_src emacs-lisp
+     (use-package indent-guide
+       :diminish 'indent-guide-mode
+       :config
+       (add-hook 'python-mode-hook 'indent-guide-mode)
+       (setq indent-guide-delay 0.1)
+       (setq indent-guide-recursive t))
+   #+end_src
+
+
+* Javascript
+
+  =rjsx-mode= is a superset of =js2-mode=, so let's just use it for all js
+  files. Maybe I'll change this in the future, but I don't do much JS
+  development, so I doubt I'll get to it.
+
+  #+begin_src emacs-lisp
+    (add-to-list 'auto-mode-alist '(".*\.js\'" . rjsx-mode))
+  #+end_src
+
+  Also, modify the indentation to be 2 spaces.
+
+  #+begin_src emacs-lisp
+    (setq js-indent-level 2)
+  #+end_src
+
+* Backlog
+
+  All the things I want to add to my config.
+
+** TODO Investigate =undo-tree=
+
+   Undo-tree looks awesome! Check [[http://pragmaticemacs.com/emacs/advanced-undoredo-with-undo-tree/][this]] out.
+
+** TODO Investigate TRAMP for SSHing into stuff
+
+** TODO Learn hydra and see if it's useful
+
+** TODO Look into a bookmarking package and get familiar with it
+
+** TODO See if there's a good library for multiple cursors
+
+** TODO Look into a tiling pane manager
+
+   Maybe something like =eyebrowse=? Or maybe something else.
+
+** TODO Improve copy/paste on OSX
+
+** TODO Sync google calendar to org-agenda
+
+   Maybe something like [[http://cestlaz.github.io/posts/using-emacs-26-gcal/#.WisxKbQ-fOQ][this]] could be helpful
+
+** TODO Fix Git gutter

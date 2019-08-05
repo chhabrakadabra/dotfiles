@@ -16,3 +16,6 @@
       tags:
         - basics
         - system
+    - role: emacs
+      tags:
+        - editing

@@ -1,0 +1,12 @@
+source-bash $(/usr/libexec/path_helper -s)
+$COMPLETIONS_CONFIRM=True
+$PATH.extend([
+  '/usr/local/bin',
+  '/Applications',
+  '/usr/local/opt/coreutils/libexec/gnubin',
+  '/Library/TeX/texbin/',
+  '/usr/local/sbin',
+  '/usr/local/opt/gettext/bin',
+  '/usr/local/opt/ncurses/bin',
+  '/opt/X11/bin',
+])

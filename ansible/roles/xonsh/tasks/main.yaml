@@ -2,3 +2,10 @@
   homebrew:
     name: xonsh
     state: present
+- name: Add xonshrc to `/etc/`
+  become: yes
+  file:
+    src: "{{ role_path }}/files/xonshrc"
+    dest: "/etc/xonshrc"
+    state: link
+    force: yes

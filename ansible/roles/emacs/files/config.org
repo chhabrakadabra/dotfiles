@@ -273,6 +273,12 @@
        (smartparens-global-mode))
    #+end_src
 
+** Replace strings
+
+   #+begin_src emacs-lisp
+     (define-key global-map (kbd "C-x p") 'replace-string)
+   #+end_src
+
 * Navigating
 
   =Saveplace= navigates back to where you were editing a file the next time you

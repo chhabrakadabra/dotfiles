@@ -50,6 +50,10 @@
   homebrew_cask:
     name: anki
     state: present
+- name: Install Latex using mactex
+  homebrew_cask:
+    name: mactex
+    state: present
 - name: Install Datagrip
   homebrew_cask:
     name: datagrip

@@ -7,14 +7,12 @@
     path: "~/.emacs.d"
     state: directory
 - name: Init file
-  file:
+  copy:
     src: "{{ role_path }}/files/init.el"
     dest: "~/.emacs.d/init.el"
-    state: link
     force: yes
 - name: Main config orgmode file
-  file:
+  copy:
     src: "{{ role_path }}/files/config.org"
     dest: "~/.emacs.d/config.org"
-    state: link
     force: yes

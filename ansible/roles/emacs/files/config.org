@@ -116,7 +116,10 @@
         pyvenv
 
         ;; Language server
-        lsp-mode lsp-ui company-lsp))
+        lsp-mode lsp-ui company-lsp
+
+        ;; For managing S3 files
+        s3ed))
 
     (defvar packages-refreshed? nil)
 
@@ -700,6 +703,16 @@
        (setq indent-guide-recursive t))
    #+end_src
 
+* Browsing S3 buckets
+
+  #+begin_src emacs-lisp
+    (use-package s3ed
+      :diminish s3ed-mode
+      :config
+      (s3ed-mode)
+      :bind (("C-c s f" . s3ed-find-file)
+             ("C-c s s" . s3ed-save-file)))
+  #+end_src
 
 * Javascript
 

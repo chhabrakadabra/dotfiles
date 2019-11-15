@@ -66,6 +66,10 @@
   homebrew_cask:
     name: google-drive-file-stream
     state: present
+- name: Install Google Cloud SDK
+  homebrew_cask:
+    name: google-cloud-sdk
+    state: present
 - name: Install Polar Bookshelf
   homebrew_cask:
     name: polar-bookshelf

@@ -54,10 +54,6 @@
   homebrew_cask:
     name: mactex
     state: present
-- name: Install Datagrip
-  homebrew_cask:
-    name: datagrip
-    state: present
 - name: Install Docker
   homebrew_cask:
     name: docker

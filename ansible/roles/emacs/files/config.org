@@ -644,21 +644,11 @@
 ** Python Language Server
 
    I'm trying to use [[https://github.com/andrew-christianson/lsp-python-ms][ls-python-ms]] to setup the Microsoft Python language server.
-   It's supposed to be much faster than the Palantir language server (which has
-   been fairly laggy for me).
 
    #+begin_src emacs-lisp
-     ;; (load "~/.emacs.d/lsp-python-ms.el")
-     ;; (use-package lsp-python-ms
-     ;;   :ensure nil
-     ;;   :hook (python-mode . lsp)
-     ;;   :config
-     ;;   (setq lsp-print-io t)
-     ;;   ;; for executable of language server, if it's not symlinked on your PATH
-     ;;   (setq lsp-python-ms-executable "Microsoft.Python.LanguageServer"))
-
      (use-package lsp-python-ms
        :ensure t
+       :init (setq lsp-python-ms-auto-install-server t)
        :hook (python-mode . (lambda ()
                               (require 'lsp-python-ms)
                               (lsp))))

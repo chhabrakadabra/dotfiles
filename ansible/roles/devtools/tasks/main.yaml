@@ -78,6 +78,10 @@
   homebrew_cask:
     name: whatsapp
     state: present
+- name: Install Dotnet
+  homebrew_cask:
+    name: dotnet
+    state: present
 - name: Install Things3
   command: mas install 904280696
   args:

@@ -86,3 +86,7 @@
   command: mas install 904280696
   args:
     creates: "/Applications/Things3.app"
+- name: Install graphviz
+  homebrew:
+    name: graphviz
+    state: present

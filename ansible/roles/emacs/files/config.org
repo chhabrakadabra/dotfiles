@@ -521,6 +521,9 @@
 
     ;; Enable syntax highlighting in org src blocks
     (setq org-src-fontify-natively t)
+
+    ;; Disable automatic searching so we can navigate easily
+    (setq org-goto-auto-isearch nil)
   #+END_SRC
 
 * Linting

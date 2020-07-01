@@ -1,7 +1,11 @@
+- name: Setup emacs-plus homebrew tap
+  homebrew_tap:
+    name: d12frosted/emacs-plus
 - name: Install Emacs
-  homebrew_cask:
-    name: emacs
+  homebrew:
+    name: emacs-plus@27
     state: present
+    install_options: --with-xwidgets --with-modern-icon-sexy-v1
 - name: Create .emacs.d directory
   file:
     path: "~/.emacs.d"

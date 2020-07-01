@@ -527,6 +527,9 @@
 
     ;; Disable automatic searching so we can navigate easily
     (setq org-goto-auto-isearch nil)
+
+    ;; Enable speed keys
+    (setq org-use-speed-commands t)
   #+END_SRC
 
 * Linting

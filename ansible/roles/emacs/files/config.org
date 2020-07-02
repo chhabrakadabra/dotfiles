@@ -121,6 +121,9 @@
         ;; Language server
         lsp-mode lsp-ui company-lsp
 
+        ;; org related
+        org-roam company-org-roam
+
         ;; For managing S3 files
         s3ed))
 
@@ -448,6 +451,13 @@
 
 * Org mode
 
+** Setup org related directories
+
+   #+begin_src emacs-lisp
+     (setq org-directory "~/Dropbox/org")
+     (setq org-default-notes-file (concat org-directory "/notes.org"))
+   #+end_src
+
 ** Basic Keyboard shortcuts
 
   #+BEGIN_SRC emacs-lisp
@@ -495,7 +505,8 @@
 
         (dump-to-file output outfile)))
 
-    (setq my/org-agenda-dirs '("~/Dropbox/" "~/Google Drive/" "~/.emacs.d/"))
+    (setq my/org-agenda-dirs '("~/Dropbox/" "~/Google Drive/"
+                               "~/projects/dotfiles/"))
     (setq org-agenda-files "~/.emacs.d/org-agenda-files")
   #+end_src
 
@@ -514,6 +525,40 @@
      (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
      (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
      (setq org-confirm-babel-evaluate 'nil)
+   #+end_src
+
+** Setup org-roam
+
+   #+begin_src emacs-lisp
+     (use-package org-roam
+       :hook
+       (after-init . org-roam-mode)
+       :custom
+       (org-roam-directory (concat org-directory "/roam/"))
+       :bind (:map org-roam-mode-map
+                   (("C-c n l" . org-roam)
+                    ("C-c n f" . org-roam-find-file)
+                    ("C-c n j" . org-roam-jump-to-index)
+                    ("C-c n b" . org-roam-switch-to-buffer)
+                    ("C-c n g" . org-roam-graph))
+                   :map org-mode-map
+                   (("C-c n i" . org-roam-insert))))
+
+     (use-package company-org-roam
+       :config
+       (push 'company-org-roam company-backends))
+   #+end_src
+
+** Setup org-capture
+
+   #+begin_src emacs-lisp
+     ;; setup capture templates
+     ;; (setq org-capture-templates
+     ;;       '(("t" "Todo" entry (file "~/Dropbox/org/tasks.org")
+     ;;          "* TODO %?\n  %i\n  %a")))
+
+     ;; setup refile targets
+     (setq org-refile-targets '((org-agenda-files :maxlevel . 3)))
    #+end_src
 
 ** Other miscellaneous org settings

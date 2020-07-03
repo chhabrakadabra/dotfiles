@@ -480,6 +480,16 @@
     (setq org-log-into-drawer t)
   #+END_SRC
 
+  Setup fast-access to TODO states ([[info:org#Fast access to TODO states][info:org#Fast access to TODO states]]).
+  Currently, I have 2 sequences, but it should be easy to add more. Trigger this
+  with any heading using =C-c C-t=.
+
+  #+begin_src emacs-lisp
+    (setq org-todo-keywords
+          '((sequence "TODO(t)" "|" "DONE(d)")
+            (sequence "|" "CANCELED(c)")))
+  #+end_src
+
 ** Set agenda files
 
   Org-mode allows specifying directories and it adds all files ending in `.org`

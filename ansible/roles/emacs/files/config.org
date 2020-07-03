@@ -817,9 +817,19 @@
 
    Maybe something like =eyebrowse=? Or maybe something else.
 
-** TODO Improve copy/paste on OSX
+** DONE Improve copy/paste on OSX
+   CLOSED: [2020-07-02 Thu 17:51]
+   :LOGBOOK:
+   - CLOSING NOTE [2020-07-02 Thu 17:51] \\
+     Works fine already at the moment.
+   :END:
 
-** TODO Sync google calendar to org-agenda
+** DONE Sync google calendar to org-agenda
+   CLOSED: [2020-07-02 Thu 17:51]
+   :LOGBOOK:
+   - CLOSING NOTE [2020-07-02 Thu 17:51] \\
+     Not useful anymore
+   :END:
 
    Maybe something like [[http://cestlaz.github.io/posts/using-emacs-26-gcal/#.WisxKbQ-fOQ][this]] could be helpful
 

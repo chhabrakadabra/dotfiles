@@ -496,6 +496,17 @@
     (push 'habits org-modules)
   #+end_src
 
+** Configure tags
+
+   See [[info:org#Setting Tags][info:org#Setting Tags]] for more details.
+
+   #+begin_src emacs-lisp
+     (setq org-tag-alist '(("@learning" . ?l)
+                           ("@content" . ?c)
+                           ("@opensource" . ?o)
+                           ("@home" . ?h)))
+   #+end_src
+
 ** Set agenda files
 
   Org-mode allows specifying directories and it adds all files ending in `.org`

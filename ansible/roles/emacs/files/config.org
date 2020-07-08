@@ -828,19 +828,19 @@
 
   All the things I want to add to my config.
 
-** TODO Investigate =undo-tree=
+** TODO [#C] Investigate =undo-tree=
 
    Undo-tree looks awesome! Check [[http://pragmaticemacs.com/emacs/advanced-undoredo-with-undo-tree/][this]] out.
 
-** TODO Investigate TRAMP for SSHing into stuff
+** TODO [#C] Investigate TRAMP for SSHing into stuff
 
-** TODO Learn hydra and see if it's useful
+** TODO [#C] Learn hydra and see if it's useful
 
-** TODO Look into a bookmarking package and get familiar with it
+** TODO [#C] Look into a bookmarking package and get familiar with it
 
-** TODO See if there's a good library for multiple cursors
+** TODO [#C] See if there's a good library for multiple cursors
 
-** TODO Look into a tiling pane manager
+** TODO [#C] Look into a tiling pane manager
 
    Maybe something like =eyebrowse=? Or maybe something else.
 
@@ -860,4 +860,4 @@
 
    Maybe something like [[http://cestlaz.github.io/posts/using-emacs-26-gcal/#.WisxKbQ-fOQ][this]] could be helpful
 
-** TODO Fix Git gutter
+** TODO [#C] Fix Git gutter

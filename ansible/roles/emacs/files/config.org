@@ -522,7 +522,7 @@
         (dump-to-file output outfile)))
 
     (setq my/org-agenda-dirs '("~/Dropbox/" "~/Google Drive/"
-                               "~/projects/dotfiles/"))
+                               "~/projects/"))
     (setq org-agenda-files "~/.emacs.d/org-agenda-files")
   #+end_src
 

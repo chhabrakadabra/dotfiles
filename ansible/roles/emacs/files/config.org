@@ -490,6 +490,12 @@
             (sequence "|" "CANCELED(c)")))
   #+end_src
 
+  Enable habit tracking via TODOs.
+
+  #+begin_src emacs-lisp
+    (push 'habits org-modules)
+  #+end_src
+
 ** Set agenda files
 
   Org-mode allows specifying directories and it adds all files ending in `.org`

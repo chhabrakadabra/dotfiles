@@ -122,7 +122,7 @@
         lsp-mode lsp-ui company-lsp
 
         ;; org related
-        org-roam company-org-roam org-journal
+        org-roam company-org-roam org-journal org-drill
 
         ;; For managing S3 files
         s3ed))
@@ -501,10 +501,15 @@
    See [[info:org#Setting Tags][info:org#Setting Tags]] for more details.
 
    #+begin_src emacs-lisp
-     (setq org-tag-alist '(("@learning" . ?l)
+     (setq org-tag-alist '((:startgrouptag)
+                           ("Context")
+                           (:grouptags)
+                           ("@learning" . ?l)
                            ("@content" . ?c)
                            ("@opensource" . ?o)
-                           ("@home" . ?h)))
+                           ("@home" . ?h)
+                           (:endgrouptag)
+                           ("drill" . ?d)))
    #+end_src
 
 ** Set agenda files
@@ -565,7 +570,7 @@
        :config
        (setq org-roam-capture-templates
              '(("d" "default" plain (function org-roam--capture-get-point)
-                "- tags :: %?\n\n* Tasks\n"
+                "- tags :: %?\n\n* Tasks\n\n* Flash Cards\n"
                 :file-name "%<%Y%m%d%H%M%S>-${slug}"
                 :head "#+TITLE: ${title}\n"
                 :unnarrowed t)))
@@ -607,6 +612,24 @@
        (org-journal-file-format "%Y-%m-%d.org")
        (org-journal-dir org-roam-directory)
        (org-journal-date-format "%A, %d %B %Y"))
+   #+end_src
+
+** Setup org-drill
+
+   org-drill is my spaced-repetition system.
+
+   #+begin_src emacs-lisp
+     (use-package org-drill
+       :config
+       (push 'org-drill org-modules)
+       (setq org-drill-hide-item-headings-p t)
+       (setq org-drill-maximum-items-per-session 10)
+
+       ;; Use all agenda-files to figure out items for drill sessions.
+       (setq org-drill-scope 'agenda)
+
+       ;; Add randomness to scheduling to avoid lumpiness
+       (setq org-drill-add-random-noise-to-intervals-p t))
    #+end_src
 
 ** Other miscellaneous org settings

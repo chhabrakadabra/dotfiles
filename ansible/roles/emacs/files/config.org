@@ -290,7 +290,7 @@
   Turn on auto-fill mode in text buffers:
 
   #+BEGIN_SRC emacs-lisp
-    (add-hook 'text-mode-hook (lambda () (refill-mode 1)))
+    (add-hook 'text-mode-hook 'turn-on-auto-fill)
   #+END_SRC
 
 ** Matching parentheses

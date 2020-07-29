@@ -20,3 +20,9 @@
     src: "{{ role_path }}/files/config.org"
     dest: "~/.emacs.d/config.org"
     force: yes
+# From https://github.com/leoliu/play-sound-osx
+- name: Copy play-sound-osx vendored package
+  copy:
+    src: "{{ role_path }}/files/play-sound.el"
+    dest: "~/.emacs.d/play-sound.el"
+    force: yes

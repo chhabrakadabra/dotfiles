@@ -125,7 +125,10 @@
         org-roam company-org-roam org-journal org-drill
 
         ;; For managing S3 files
-        s3ed))
+        s3ed
+
+        ;; Pomodoro
+        alert pomidor))
 
     (defvar packages-refreshed? nil)
 
@@ -224,6 +227,23 @@
     ;; if we wanted to use this file, we could use it by
     ;; uncommenting the following:
     ; (load custom-file 'noerror)
+  #+end_src
+
+  Alert needs to use the osx notifications as the default backend.
+
+  #+begin_src emacs-lisp
+    (use-package alert
+      :config
+      (setq alert-default-style 'osx-notifier))
+  #+end_src
+
+  Enable sounds to be played though the OSX afplay command. Inspired by [[https://github.com/leoliu/play-sound-osx][this
+  repo]].
+
+  #+begin_src emacs-lisp
+    (unless (and (fboundp 'play-sound-internal)
+                 (subrp (symbol-function 'play-sound-internal)))
+      (load "~/.emacs.d/play-sound"))
   #+end_src
 
 * Path from shell initialize
@@ -829,6 +849,16 @@
       (s3ed-mode)
       :bind (("C-c s f" . s3ed-find-file)
              ("C-c s s" . s3ed-save-file)))
+  #+end_src
+
+* Pomodoro
+
+  I'm trying to use [[https://github.com/TatriX/pomidor][Pomidor]] to manage my Pomodoros.
+
+  #+begin_src emacs-lisp
+    (use-package pomidor
+      ;; "t" for tomato/timer?
+      :bind (("C-c t" . pomidor)))
   #+end_src
 
 * Javascript

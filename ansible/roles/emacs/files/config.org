@@ -699,6 +699,9 @@
 
     ;; Enable speed keys
     (setq org-use-speed-commands t)
+
+    ;; Enable property inheritance
+    (setq org-use-preperty-inheritance t)
   #+END_SRC
 
 * Linting

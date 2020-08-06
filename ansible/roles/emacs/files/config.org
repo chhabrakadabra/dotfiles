@@ -127,6 +127,9 @@
         ;; For managing S3 files
         s3ed
 
+        ;; More performant implementation of linum-mode
+        nlinum
+
         ;; Pomodoro
         alert pomidor))
 
@@ -350,7 +353,8 @@
    While we're at it, also enable line and column number modes.
 
    #+BEGIN_SRC emacs-lisp
-     (global-linum-mode 1)
+     (global-nlinum-mode 1)
+     (setq nlinum-highlight-current-line t)
      (line-number-mode 1)
      (column-number-mode 1)
    #+END_SRC

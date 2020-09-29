@@ -706,6 +706,9 @@
 
     ;; Enable property inheritance
     (setq org-use-preperty-inheritance t)
+
+    ;; Pay attention to image size attributes
+    (setq org-image-actual-width nil)
   #+END_SRC
 
 * Linting

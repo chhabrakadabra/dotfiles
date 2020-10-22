@@ -42,6 +42,10 @@
   homebrew:
     name: watch
     state: present
+- name: Install PlantUML
+  homebrew:
+    name: watch
+    state: plantuml
 - name: Install MAS
   homebrew:
     name: mas

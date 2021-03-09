@@ -1,4 +1,4 @@
 full_name: Abhin Chhabra
-github_username: abhin-rk
-git_email: abhin.chhabra@rubikloud.com
+github_username: chhabrakadabra
+git_email: abhin@10xsoft.org
 home_path: "{{ '~' | expanduser }}"

@@ -172,3 +172,24 @@
     type: bool
     value: true
     state: present
+
+################
+## General apps
+################
+
+- name: Install homebrew casks
+  homebrew_cask:
+    name:
+      - spotify
+      - whatsapp
+      - polar-bookshelf
+      - google-drive-file-stream
+      - google-cloud-sdk
+      - anki
+      - 1password
+      - google-chrome
+
+- name: Install Things3
+  command: mas install 904280696
+  args:
+    creates: "/Applications/Things3.app"

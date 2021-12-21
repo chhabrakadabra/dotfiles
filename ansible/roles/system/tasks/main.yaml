@@ -188,8 +188,11 @@
       - anki
       - 1password
       - google-chrome
+      - contexts
 
-- name: Install Things3
-  command: mas install 904280696
-  args:
-    creates: "/Applications/Things3.app"
+- name: Install Mac App Store (MAS) applications
+  community.general.mas:
+    id:
+      - 904280696  # Things3
+      - 441258766  # Magnet
+    state: present

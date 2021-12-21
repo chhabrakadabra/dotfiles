@@ -23,4 +23,4 @@
       - docker
       - mactex
       - visual-studio-code
-
+      - iterm2
